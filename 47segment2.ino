@@ -130,7 +130,7 @@ if(xVal<300&&dxchanged==0)
 {
  thedisplay--;
  if(thedisplay<0)
- thedisplay=0;
+ thedisplay=3;
  dxchanged=1;
 }
 else
@@ -139,7 +139,7 @@ else
   {
     thedisplay++;
     if(thedisplay>3)
-      thedisplay=3;
+      thedisplay=0;
      dxchanged=1;
   }
   else
@@ -158,32 +158,53 @@ else
 
 
   Serial.print("Switch:  ");
-  Serial.print(swVal);
+  //Serial.print(swVal);
+  Serial.print(count[thedisplay]);
   Serial.print("  |  ");
   Serial.print("X-axis: ");
-  Serial.print(xVal);
+  //Serial.print(xVal);
+  Serial.print(ok);
   Serial.print("  |  ");
   Serial.print("Y-axis: ");
-  Serial.print(yVal);
+  //Serial.print(yVal);
+  Serial.print(thedisplay);
   Serial.println("  |  ");
   
   
   if(ok==0)
-  {display2(thedisplay,count[thedisplay]%10,HIGH);}
+  {
+    
+    digitalWrite(displays[0],HIGH);//high este pt stins
+    digitalWrite(displays[1],HIGH);
+    digitalWrite(displays[2],HIGH);
+    digitalWrite(displays[3],HIGH);
+    display2(thedisplay,count[thedisplay]%10,HIGH);
+    
+    
+    delay(200);
+    }
   else
   {
-    display3(thedisplay,count[thedisplay]%10,HIGH);
-    display3((thedisplay+1)%4,count[(thedisplay+1)%4]%10,LOW);
+
+//    digitalWrite(displays[0],LOW);//high este pt stins, si era high
+//    digitalWrite(displays[1],LOW);
+//    digitalWrite(displays[2],LOW);
+//    digitalWrite(displays[3],LOW);
+    
+    
+    display3((thedisplay+1)%4,count[(thedisplay+2)%4]%10,LOW);
     display3((thedisplay+2)%4,count[(thedisplay+2)%4]%10,LOW);
     display3((thedisplay+3)%4,count[(thedisplay+3)%4]%10,LOW);
+    display3(thedisplay,count[(thedisplay)%4]%10,LOW);
     
   }
-  delay(200);
+  
 
 }
 
 void display2 (int displayVal, int digit,int dotVal)
 {
+  digitalWrite(displays[(displayVal)%4],LOW);
   digitalWrite(displays[(displayVal+1)%4],HIGH);//high este pt stins
   digitalWrite(displays[(displayVal+2)%4],HIGH);
   digitalWrite(displays[(displayVal+3)%4],HIGH);
@@ -194,12 +215,19 @@ void display2 (int displayVal, int digit,int dotVal)
  }
 
  digitalWrite(segments[ssize-1],dotVal);
+ 
 }
 
 
 void display3 (int displayVal, int digit,int dotVal)
 {
-  digitalWrite(displays[(displayVal)%4],!dotVal);
+  digitalWrite(displays[(displayVal)%4],LOW);
+
+  digitalWrite(displays[(displayVal+1)%4],HIGH);//high este pt stins
+  digitalWrite(displays[(displayVal+2)%4],HIGH);
+  digitalWrite(displays[(displayVal+3)%4],HIGH);
+  
+
   
  for(int l=0;l<ssize-1;l++)
  {
@@ -207,5 +235,6 @@ void display3 (int displayVal, int digit,int dotVal)
  }
 
 
- digitalWrite(segments[ssize-1],dotVal);
+ digitalWrite(segments[ssize-1],dotVal); //dot avea, ! in fata
+ 
 }
